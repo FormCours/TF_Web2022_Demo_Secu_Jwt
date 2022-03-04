@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -6,10 +7,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Demo_Secu_Jwt
@@ -26,6 +29,24 @@ namespace Demo_Secu_Jwt
       // This method gets called by the runtime. Use this method to add services to the container.
       public void ConfigureServices(IServiceCollection services)
       {
+         // Le serveur API traite les JWT
+         services
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+               options.TokenValidationParameters = new TokenValidationParameters()
+               {
+                  ValidateIssuer = true,
+                  ValidateAudience = true,
+                  ValidateLifetime = true,
+                  ValidateIssuerSigningKey = true,
+                  ValidIssuer = Configuration["jwt:issuer"],
+                  ValidAudience = Configuration["jwt:audience"],
+                  IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(Configuration["jwt:key"])
+                  )
+               };
+            });
 
          services.AddControllers();
          services.AddSwaggerGen(c =>
@@ -47,6 +68,9 @@ namespace Demo_Secu_Jwt
          app.UseHttpsRedirection();
 
          app.UseRouting();
+
+         // Ajout l'utilisation des attributs d'authentification dans les controllers
+         app.UseAuthentication();
 
          app.UseAuthorization();
 
