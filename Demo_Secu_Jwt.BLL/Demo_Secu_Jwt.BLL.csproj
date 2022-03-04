@@ -5,8 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTO\" />
-    <Folder Include="Services\" />
+    <ProjectReference Include="..\Demo_Secu_Jwt.DAL\Demo_Secu_Jwt.DAL.csproj" />
   </ItemGroup>
 
 </Project>

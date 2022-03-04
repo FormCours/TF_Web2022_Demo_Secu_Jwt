@@ -1,3 +1,5 @@
+using Demo_Secu_Jwt.BLL.Services;
+using Demo_Secu_Jwt.DAL.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +13,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -47,6 +51,14 @@ namespace Demo_Secu_Jwt
                   )
                };
             });
+
+         services.AddTransient(typeof(IDbConnection), s =>
+         {
+            return new SqlConnection(Configuration.GetConnectionString("default"));
+         });
+         services.AddTransient(typeof(UserService));
+         services.AddTransient(typeof(ProductService));
+         services.AddTransient(typeof(UserDTOService));
 
          services.AddControllers();
          services.AddSwaggerGen(c =>
