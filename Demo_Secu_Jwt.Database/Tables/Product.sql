@@ -7,7 +7,7 @@
 	[Price] MONEY NOT NULL,
 	[Quantity] INT NOT NULL DEFAULT 0,
 	[Category_Id] INT NOT NULL,
-	[Create_Date] DATETIME2 NOT NULL DEFAULT NOW(),
+	[Create_Date] DATETIME2 NOT NULL DEFAULT GETDATE(),
 	[Update_Date] DATETIME2 NULL,
 	CONSTRAINT PK_Product 
 		PRIMARY KEY ([Product_Id]),
